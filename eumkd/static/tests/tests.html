@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Javascript tests</title>
+    <link rel="stylesheet" href="../../../project/static/tests/qunit-1.15.0.css">
+</head>
+
+<body>
+<div id="qunit"></div>
+
+<div id="qunit-fixture">
+    <form>
+        <input id="id_number" name="number" type="text">
+        <input id="id_discipline" name="discipline" type="text">
+        <input id="id_specialty" name="specialty" type="text">
+    </form>
+</div>
+
+
+<script src="http://code.jquery.com/jquery.min.js"></script>
+<script src="../../../project/static/select2/select2.js"></script>
+
+<script src="../../../project/static/tests/qunit-1.15.0.js"></script>
+<script src="../../../project/static/tests/sinon-1.10.3.js"></script>
+<script src="../search.js"></script>
+<script>
+    /*global $, test, equal */
+
+    var $mockElement;
+    module('select2 tests', {
+        setup: function() {
+            $mockElement = {
+                select2: sinon.mock()
+            };
+        }
+    });
+
+    test("initialize select2", function (assert) {
+        Eumkd.Search.initializeSelect2Autocomplete($mockElement);
+        equal(
+            $mockElement.select2.calledOnce,
+            true, 'check select2 called'
+        );
+    });
+
+    test("passes params to select2", function(){
+        var params = {
+            initSelection: 'test'
+        };
+        Eumkd.Search.initializeSelect2Autocomplete($mockElement, 'url', params);
+        equal(
+            $mockElement.select2.calledWithMatch({
+                ajax: { url: 'url' },
+                initSelection: 'test'
+            }),
+            true, 'check initSelection called'
+        );
+    });
+
+    test('passes autocomplete url to ajax from select2', function(){
+        Eumkd.Search.initializeSelect2Autocomplete($mockElement, 'http://some_url.com/');
+
+        equal($mockElement.select2.calledWithMatch({
+                ajax: { url: 'http://some_url.com/' }
+            }),
+            true, 'check initSelection called'
+        );
+    });
+
+</script>
+
+</body>
+</html>
